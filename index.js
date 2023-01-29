@@ -56,15 +56,30 @@ class Player {
 }
 
 class Projectile {
-  constructor({ position }, velocity) {
+  constructor({ position, velocity }) {
     this.position = position;
     this.velocity = velocity;
 
     this.radius = 3;
   }
+
+  draw() {
+    c.beginPath();
+    c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
+    c.fillStyle = "red";
+    c.fill();
+    c.closePath();
+  }
+
+  update() {
+    this.draw();
+    this.position.x += this.velocity.x;
+    this.position.y += this.velocity.y;
+  }
 }
 
 const player = new Player();
+const projectiles = [];
 const keys = {
   a: {
     pressed: false,
@@ -79,9 +94,19 @@ const keys = {
 
 function animate() {
   requestAnimationFrame(animate);
-  c.fillStyle = "black";
+  c.fillStyle = "rgba(0, 0, 0, 1)";
   c.fillRect(0, 0, canvas.width, canvas.height);
   player.update();
+
+  projectiles.forEach((projectile, i) => {
+    if (projectile.position.y <= 0) {
+      setTimeout(() => {
+        projectiles.splice(i, 1);
+      }, 0);
+    } else {
+      projectile.update();
+    }
+  });
 
   if (keys.a.pressed && player.position.x >= 0) {
     player.velocity.x = -7;
@@ -100,20 +125,6 @@ function animate() {
 
 animate();
 
-addEventListener("keyup", ({ key }) => {
-  switch (key) {
-    case "a":
-      keys.a.pressed = false;
-      break;
-    case "d":
-      keys.d.pressed = false;
-      break;
-    case " ":
-      console.log("shoot");
-      break;
-  }
-});
-
 addEventListener("keydown", ({ key }) => {
   switch (key) {
     case "a":
@@ -123,7 +134,31 @@ addEventListener("keydown", ({ key }) => {
       keys.d.pressed = true;
       break;
     case " ":
-      console.log("shoot");
+      projectiles.push(
+        new Projectile({
+          position: {
+            x: player.position.x - player.width / 2,
+            y: player.position.y,
+          },
+          velocity: {
+            x: 0,
+            y: -10,
+          },
+        })
+      );
+      break;
+  }
+});
+
+addEventListener("keyup", ({ key }) => {
+  switch (key) {
+    case "a":
+      keys.a.pressed = false;
+      break;
+    case "d":
+      keys.d.pressed = false;
+      break;
+    case " ":
       break;
   }
 });

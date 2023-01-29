@@ -54,7 +54,7 @@ class Projectile {
     this.position = position;
     this.velocity = velocity;
 
-    this.radius = 3;
+    this.radius = 4;
   }
 
   draw() {
@@ -85,10 +85,9 @@ class Invader {
     const image = new Image();
     image.src = `./img/minionSprite.png`;
     image.onload = () => {
-      const scale = 1;
       this.image = image;
-      this.width = image.width * scale;
-      this.height = image.height * scale;
+      this.width = image.width / 9;
+      this.height = image.height;
       this.position = {
         x: position.x,
         y: position.y,
@@ -114,7 +113,7 @@ class Invader {
       cropbox.height,
       this.position.x,
       this.position.y,
-      this.width / 9,
+      this.width,
       this.height
     );
   }
@@ -155,7 +154,7 @@ class Grid {
 
     const columns = Math.floor(Math.random() * 10 + 5);
     const rows = Math.floor(Math.random() * 5 + 2);
-    const invaderWidth = 40;
+    const invaderWidth = 48;
     this.width = columns * invaderWidth;
     for (let x = 0; x < columns; x++) {
       for (let y = 0; y < rows; y++) {

@@ -55,16 +55,28 @@ function animate() {
           projectile.position.y + projectile.radius >= invader.position.y
         ) {
           setTimeout(() => {
-            const invaderFound = grid.invaders.find((invader2) => {
-              return invader2 === invader;
-            });
-            const projectileFound = projectiles.find((projectile2) => {
-              return projectile2 === projectile;
-            });
+            const invaderFound = grid.invaders.find(
+              (invader2) => invader2 === invader
+            );
+            const projectileFound = projectiles.find(
+              (projectile2) => projectile2 === projectile
+            );
 
+            // Remove invaders and projectiles
             if (invaderFound && projectileFound) {
               grid.invaders.splice(i, 1);
               projectiles.splice(j, 1);
+
+              if (grid.invaders.length > 0) {
+                const firstInvader = grid.invaders[0];
+                const lastInvader = grid.invaders[grid.invaders.length - 1];
+
+                grid.width =
+                  lastInvader.position.x -
+                  firstInvader.position.x +
+                  lastInvader.width;
+                grid.position.x = firstInvader.position.x;
+              }
             }
           }, 0);
         }
@@ -72,13 +84,10 @@ function animate() {
     });
   });
 
-  if (keys.a.pressed && player.position.x >= 0) {
+  if (keys.a.pressed && player.position.x - player.width >= 0) {
     player.velocity.x = -7;
     player.rotation = -0.15;
-  } else if (
-    keys.d.pressed &&
-    player.position.x + player.width <= canvas.width
-  ) {
+  } else if (keys.d.pressed && player.position.x <= canvas.width) {
     player.velocity.x = 7;
     player.rotation = 0.15;
   } else {

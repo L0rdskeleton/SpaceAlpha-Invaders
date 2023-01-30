@@ -2,15 +2,20 @@ const canvas = document.querySelector("canvas");
 const c = canvas.getContext("2d");
 const scoreEl = document.getElementById("scoreEl");
 
-canvas.width = 1024;
-canvas.height = 576;
+canvas.width = 1366;
+canvas.height = 768;
+
+function randomBetween(min, max) {
+  return Math.random() * (max - min) + min;
+}
 
 const player = new Player();
 const projectiles = [];
 const grids = [];
 const invaderProjectiles = [];
 const particles = [];
-const stars = [];
+const bombs = [];
+const powerUps = [];
 
 const keys = {
   a: {
@@ -20,6 +25,9 @@ const keys = {
     pressed: false,
   },
   space: {
+    pressed: false,
+  },
+  mouse: {
     pressed: false,
   },
 };
@@ -70,11 +78,72 @@ function createParticles({ object, color, fades }) {
   }
 }
 
+function createScoreLabel({ score = 100, object }) {
+  const scoreLabel = document.createElement("label");
+  document.querySelector(".container").appendChild(scoreLabel);
+  scoreLabel.innerHTML = score;
+  scoreLabel.style.position = "absolute";
+  scoreLabel.style.top = `${object.position.y + object.height / 2}px`;
+  scoreLabel.style.left = `${object.position.x + object.width / 2}px`;
+  scoreLabel.style.color = "white";
+  scoreLabel.style.userSelect = "none";
+  gsap.to(scoreLabel, {
+    opacity: 0,
+    y: -30,
+    duration: 0.75,
+    onComplete: () => {
+      document.querySelector(".container").removeChild(scoreLabel);
+    },
+  });
+}
+
 function animate() {
   if (!game.active) return;
   requestAnimationFrame(animate);
   c.fillStyle = "rgba(0, 0, 0, 1)";
   c.fillRect(0, 0, canvas.width, canvas.height);
+
+  for (let i = powerUps.length - 1; i >= 0; i--) {
+    const powerUp = powerUps[i];
+    if (powerUp.position.x - powerUp.radius >= canvas.width) {
+      powerUps.splice(i, 1);
+    } else {
+      powerUp.update();
+    }
+  }
+
+  // Spawn powerUps
+  if (frames % 500 === 0 && bombs.length < 3) {
+    powerUps.push(
+      new PowerUp({
+        position: { x: 0, y: Math.random() * 300 + 15 },
+        velocity: { x: 5, y: 0 },
+      })
+    );
+  }
+  // Spawn bombs
+  if (frames % 200 === 0 && bombs.length < 3) {
+    bombs.push(
+      new Bomb({
+        position: {
+          x: randomBetween(Bomb.radius, canvas.width - Bomb.radius),
+          y: randomBetween(Bomb.radius, canvas.height - Bomb.radius),
+        },
+        velocity: {
+          x: (Math.random() - 0.5) * 6,
+          y: (Math.random() - 0.5) * 6,
+        },
+      })
+    );
+  }
+
+  for (let i = bombs.length - 1; i >= 0; i--) {
+    const bomb = bombs[i];
+    if (bomb.opacity <= 0) {
+      bombs.splice(i, 1);
+    }
+    bomb.update();
+  }
 
   player.update();
 
@@ -123,15 +192,47 @@ function animate() {
     }
   });
 
-  projectiles.forEach((projectile, i) => {
-    if (projectile.position.y <= 0) {
-      setTimeout(() => {
+  for (let i = projectiles.length - 1; i >= 0; i--) {
+    const projectile = projectiles[i];
+    for (let j = bombs.length - 1; j >= 0; j--) {
+      const bomb = bombs[j];
+      // if projectile touches bomb remove projectile
+      if (
+        Math.hypot(
+          projectile.position.x - bomb.position.x,
+          projectile.position.y - bomb.position.y
+        ) <
+          projectile.radius + bomb.radius &&
+        !bomb.active
+      ) {
         projectiles.splice(i, 1);
-      }, 0);
+        bomb.explode();
+      }
+    }
+    // if projectile touches powerUp
+    for (let j = powerUps.length - 1; j >= 0; j--) {
+      const powerUp = powerUps[j];
+      if (
+        Math.hypot(
+          projectile.position.x - powerUp.position.x,
+          projectile.position.y - powerUp.position.y
+        ) <
+        projectile.radius + powerUp.radius
+      ) {
+        projectiles.splice(i, 1);
+        powerUps.splice(j, 1);
+        player.powerUp = "MachineGun";
+        setTimeout(() => {
+          player.powerUp = null;
+        }, 5000);
+      }
+    }
+    if (projectile.position.y + projectile.radius <= 0) {
+      projectiles.splice(i, 1);
     } else {
       projectile.update();
     }
-  });
+  }
 
   grids.forEach((grid, gridIndex) => {
     grid.update();
@@ -141,8 +242,30 @@ function animate() {
         invaderProjectiles
       );
     }
-    grid.invaders.forEach((invader, i) => {
+
+    for (let i = grid.invaders.length - 1; i >= 0; i--) {
+      const invader = grid.invaders[i];
       invader.update({ velocity: grid.velocity });
+
+      for (let j = bombs.length - 1; j >= 0; j--) {
+        const bomb = bombs[j];
+        const invaderRadius = 24;
+        // if bomb touches invader remove invader
+        if (
+          Math.hypot(
+            invader.position.x - bomb.position.x,
+            invader.position.y - bomb.position.y
+          ) <
+            invaderRadius + bomb.radius &&
+          bomb.active
+        ) {
+          score += 50;
+          scoreEl.innerHTML = score;
+          grid.invaders.splice(i, 1);
+          createScoreLabel({ object: invader, score: 50 });
+          createParticles({ object: invader, color: "orange", fades: true });
+        }
+      }
 
       // Projectiles hit enemy
       projectiles.forEach((projectile, j) => {
@@ -167,27 +290,7 @@ function animate() {
               score += 100;
               scoreEl.innerHTML = score;
               // Dynamic score labels
-              const scoreLabel = document.createElement("label");
-              document.querySelector(".container").appendChild(scoreLabel);
-              scoreLabel.innerHTML = "100";
-              scoreLabel.style.position = "absolute";
-              scoreLabel.style.top = `${
-                invader.position.y + invader.height / 2
-              }px`;
-              scoreLabel.style.left = `${
-                invader.position.x + invader.width / 2
-              }px`;
-              scoreLabel.style.color = "white";
-              scoreLabel.style.userSelect = "none";
-              gsap.to(scoreLabel, {
-                opacity: 0,
-                y: -30,
-                duration: 0.75,
-                onComplete: () => {
-                  document.querySelector(".container").removeChild(scoreLabel);
-                },
-              });
-
+              createScoreLabel({ object: invader });
               createParticles({
                 object: invader,
                 color: "orange",
@@ -212,7 +315,7 @@ function animate() {
           }, 0);
         }
       });
-    });
+    }
   });
 
   if (keys.a.pressed && player.position.x >= 0) {
@@ -235,6 +338,28 @@ function animate() {
     frames = 0;
   }
 
+  // start or stop powerups
+  if (
+    (keys.space.pressed &&
+      player.powerUp === "MachineGun" &&
+      frames % 2 === 0) ||
+    (keys.mouse.pressed && player.powerUp === "MachineGun" && frames % 4 === 0)
+  ) {
+    projectiles.push(
+      new Projectile({
+        position: {
+          x: player.position.x + player.width / 2,
+          y: player.position.y,
+        },
+        velocity: {
+          x: 0,
+          y: -10,
+        },
+        color: "yellow",
+      })
+    );
+  }
+
   frames++;
 }
 
@@ -250,18 +375,24 @@ addEventListener("keydown", ({ key }) => {
       keys.d.pressed = true;
       break;
     case " ":
-      projectiles.push(
-        new Projectile({
-          position: {
-            x: player.position.x + player.width / 2,
-            y: player.position.y,
-          },
-          velocity: {
-            x: 0,
-            y: -10,
-          },
-        })
-      );
+      keys.space.pressed = true;
+      if (player.powerUp === "MachineGun") return;
+      if (keys.space.pressed) {
+        projectiles.push(
+          new Projectile({
+            position: {
+              x: player.position.x + player.width / 2,
+              y: player.position.y,
+            },
+            velocity: {
+              x: 0,
+              y: -10,
+            },
+          })
+        );
+        keys.space.pressed = false;
+      }
+
       break;
   }
 });
@@ -276,12 +407,16 @@ addEventListener("keyup", ({ key }) => {
       keys.d.pressed = false;
       break;
     case " ":
+      keys.space.pressed = false;
+
       break;
   }
 });
 
-addEventListener("click", () => {
+addEventListener("mousedown", () => {
   if (game.over) return;
+  keys.mouse.pressed = true;
+  if (player.powerUp === "MachineGun") return;
   projectiles.push(
     new Projectile({
       position: {
@@ -294,6 +429,11 @@ addEventListener("click", () => {
       },
     })
   );
+});
+
+addEventListener("mouseup", () => {
+  if (game.over) return;
+  keys.mouse.pressed = false;
 });
 
 addEventListener("resize", () => {

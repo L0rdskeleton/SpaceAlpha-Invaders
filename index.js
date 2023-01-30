@@ -342,7 +342,7 @@ function animate() {
   if (
     (keys.space.pressed &&
       player.powerUp === "MachineGun" &&
-      frames % 2 === 0) ||
+      frames % 4 === 0) ||
     (keys.mouse.pressed && player.powerUp === "MachineGun" && frames % 4 === 0)
   ) {
     projectiles.push(
@@ -365,9 +365,9 @@ function animate() {
 
 animate();
 
-addEventListener("keydown", ({ key }) => {
+addEventListener("keydown", (e) => {
   if (game.over) return;
-  switch (key) {
+  switch (e.key) {
     case "a":
       keys.a.pressed = true;
       break;
@@ -376,6 +376,9 @@ addEventListener("keydown", ({ key }) => {
       break;
     case " ":
       keys.space.pressed = true;
+      if (e.repeat) {
+        return;
+      }
       if (player.powerUp === "MachineGun") return;
       if (keys.space.pressed) {
         projectiles.push(
@@ -390,7 +393,6 @@ addEventListener("keydown", ({ key }) => {
             },
           })
         );
-        keys.space.pressed = false;
       }
 
       break;

@@ -10,3 +10,27 @@ html {
   box-sizing: border-box;
   font-size: 62.5%;
 }
+
+body {
+  font-family: sans-serif;
+  background-color: blue;
+}
+
+.container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.content {
+  position: relative;
+}
+
+.liveScore {
+  position: absolute;
+  z-index: 10;
+  color: white;
+  font-size: 2.4rem;
+  padding: 1.6rem;
+  letter-spacing: 1px;
+}

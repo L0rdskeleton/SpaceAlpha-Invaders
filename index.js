@@ -2,8 +2,8 @@ const canvas = document.querySelector("canvas");
 const c = canvas.getContext("2d");
 const scoreEl = document.getElementById("scoreEl");
 
-canvas.width = 1024;
-canvas.height = 576;
+canvas.width = innerWidth;
+canvas.height = innerHeight;
 
 const player = new Player();
 const projectiles = [];
@@ -231,7 +231,7 @@ addEventListener("keydown", ({ key }) => {
       projectiles.push(
         new Projectile({
           position: {
-            x: player.position.x - player.width / 2,
+            x: player.position.x + player.width / 2,
             y: player.position.y,
           },
           velocity: {
@@ -245,6 +245,7 @@ addEventListener("keydown", ({ key }) => {
 });
 
 addEventListener("keyup", ({ key }) => {
+  if (game.over) return;
   switch (key) {
     case "a":
       keys.a.pressed = false;
@@ -262,7 +263,7 @@ addEventListener("click", () => {
   projectiles.push(
     new Projectile({
       position: {
-        x: player.position.x - player.width / 2,
+        x: player.position.x + player.width / 2,
         y: player.position.y,
       },
       velocity: {

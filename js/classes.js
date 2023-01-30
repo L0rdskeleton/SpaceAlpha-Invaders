@@ -222,8 +222,8 @@ class Grid {
     };
     this.invaders = [];
 
-    const columns = Math.floor(Math.random() * 10 + 5);
-    const rows = Math.floor(Math.random() * 5 + 2);
+    const columns = Math.floor(Math.random() * 10 + 1);
+    const rows = Math.floor(Math.random() * 5 + 1);
     const invaderWidth = 48;
     this.width = columns * invaderWidth;
     for (let x = 0; x < columns; x++) {

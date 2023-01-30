@@ -2,8 +2,8 @@ const canvas = document.querySelector("canvas");
 const c = canvas.getContext("2d");
 const scoreEl = document.getElementById("scoreEl");
 
-canvas.width = innerWidth;
-canvas.height = innerHeight;
+canvas.width = 1024;
+canvas.height = 576;
 
 const player = new Player();
 const projectiles = [];
@@ -166,6 +166,28 @@ function animate() {
             if (invaderFound && projectileFound) {
               score += 100;
               scoreEl.innerHTML = score;
+              // Dynamic score labels
+              const scoreLabel = document.createElement("label");
+              document.querySelector(".container").appendChild(scoreLabel);
+              scoreLabel.innerHTML = "100";
+              scoreLabel.style.position = "absolute";
+              scoreLabel.style.top = `${
+                invader.position.y + invader.height / 2
+              }px`;
+              scoreLabel.style.left = `${
+                invader.position.x + invader.width / 2
+              }px`;
+              scoreLabel.style.color = "white";
+              scoreLabel.style.userSelect = "none";
+              gsap.to(scoreLabel, {
+                opacity: 0,
+                y: -30,
+                duration: 0.75,
+                onComplete: () => {
+                  document.querySelector(".container").removeChild(scoreLabel);
+                },
+              });
+
               createParticles({
                 object: invader,
                 color: "orange",

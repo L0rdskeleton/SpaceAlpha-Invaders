@@ -13,6 +13,7 @@ html {
 
 body {
   font-family: sans-serif;
+  background-color: aqua;
 }
 
 .liveScore {
@@ -22,4 +23,11 @@ body {
   font-size: 1.6rem;
   padding: 1.6rem;
   letter-spacing: 1px;
+}
+
+.container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

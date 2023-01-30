@@ -376,7 +376,7 @@ addEventListener("keydown", (e) => {
       break;
     case " ":
       keys.space.pressed = true;
-      if (e.repeat) {
+      if (e.key === " " && e.repeat) {
         return;
       }
       if (player.powerUp === "MachineGun") return;

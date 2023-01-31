@@ -2,6 +2,7 @@ const canvas = document.querySelector("canvas");
 const c = canvas.getContext("2d");
 const scoreEl = document.getElementById("scoreEl");
 const finalScoreEl = document.getElementById("finalScoreEl");
+const powerUpTypes ["MachineGun", "MultiShot"]
 
 canvas.width = 1366;
 canvas.height = 768;
@@ -249,6 +250,7 @@ function animate() {
     // if projectile touches powerUp
     for (let j = powerUps.length - 1; j >= 0; j--) {
       const powerUp = powerUps[j];
+      const randomPowerUp = Math.floor(Math.random() * powerUpTypes.length);
       if (
         Math.hypot(
           projectile.position.x - powerUp.position.x,
@@ -258,7 +260,7 @@ function animate() {
       ) {
         projectiles.splice(i, 1);
         powerUps.splice(j, 1);
-        player.powerUp = "MachineGun";
+        player.powerUp = powerUpTypes[randomPowerUp];
         audio.bonus.play();
         setTimeout(() => {
           player.powerUp = null;
@@ -422,6 +424,34 @@ function animate() {
       })
     );
   }
+  if (
+    (keys.space.pressed && player.powerup === "MultiShot" && !game.over) || (keys.mouse.pressed && player.powerUp === "MultiShot" && !game.over)
+    ) {
+    audio.shoot.play();
+    
+    projectiles.push(
+      new Projectile({
+        position: {
+          x: player.position.x + player.width / 2,
+          y: player.position.y,
+        },
+        velocity: {
+          x = -5,
+          y = -10,
+        }
+      })
+      new Projectile({
+        position: {
+          x: player.position.x + player.width / 2,
+          y: player.position.y,
+        },
+        velocity: {
+          x = 5,
+          y = -10,
+        }
+      })
+    );
+}
 
   frames++;
 }

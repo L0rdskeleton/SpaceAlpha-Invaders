@@ -425,7 +425,7 @@ function animate() {
     );
   }
   if (
-    (keys.space.pressed && player.powerup === "MultiShot" && !game.over) || (keys.mouse.pressed && player.powerUp === "MultiShot" && !game.over)
+    (keys.space.pressed && player.powerUp === "MultiShot" && !game.over) || (keys.mouse.pressed && player.powerUp === "MultiShot" && !game.over)
     ) {
     audio.shoot.play();
     

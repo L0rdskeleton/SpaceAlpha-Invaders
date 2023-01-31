@@ -436,8 +436,8 @@ function animate() {
           y: player.position.y,
         },
         velocity: {
-          x = -5,
-          y = -10,
+          x: -5,
+          y: -10,
         }
       }),
       new Projectile({
@@ -446,8 +446,8 @@ function animate() {
           y: player.position.y,
         },
         velocity: {
-          x = 5,
-          y = -10,
+          x: 5,
+          y: -10,
         }
       })
     );

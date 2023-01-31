@@ -399,8 +399,12 @@ function animate() {
   if (
     (keys.space.pressed &&
       player.powerUp === "MachineGun" &&
-      frames % 4 === 0) ||
-    (keys.mouse.pressed && player.powerUp === "MachineGun" && frames % 4 === 0)
+      frames % 4 === 0 &&
+      !game.over) ||
+    (keys.mouse.pressed &&
+      player.powerUp === "MachineGun" &&
+      frames % 4 === 0 &&
+      !game.over)
   ) {
     audio.shoot.play();
 

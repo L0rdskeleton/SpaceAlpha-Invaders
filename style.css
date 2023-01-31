@@ -92,3 +92,26 @@ body {
   font-size: 2.4rem;
   margin-bottom: 2.4rem;
 }
+
+.sound {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 1.6rem;
+  z-index: 20;
+}
+
+.sound__off {
+  color: white;
+  width: 2.4rem;
+  height: 2.4rem;
+  cursor: pointer;
+  display: none;
+}
+
+.sound__on {
+  color: white;
+  width: 2.4rem;
+  height: 2.4rem;
+  cursor: pointer;
+}

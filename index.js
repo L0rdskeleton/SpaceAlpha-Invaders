@@ -6,10 +6,6 @@ const finalScoreEl = document.getElementById("finalScoreEl");
 canvas.width = 1366;
 canvas.height = 768;
 
-function randomBetween(min, max) {
-  return Math.random() * (max - min) + min;
-}
-
 let player = new Player();
 let projectiles = [];
 let grids = [];
@@ -17,6 +13,7 @@ let invaderProjectiles = [];
 let particles = [];
 let bombs = [];
 let powerUps = [];
+let gameStarted = false;
 
 let keys = {
   a: {
@@ -46,6 +43,11 @@ let game = {
   active: true,
 };
 let score = 0;
+
+let spawnBuffer = 500;
+let fps = 60;
+let fpsInterval = 1000 / fps;
+let msPrev = window.performance.now();
 
 function init() {
   scoreEl.innerHTML = 0;
@@ -105,53 +107,6 @@ function init() {
   }
 }
 
-function createParticles({ object, color, fades }) {
-  for (let i = 0; i < 15; i++) {
-    particles.push(
-      new Particle({
-        position: {
-          x: object.position.x + object.width / 2,
-          y: object.position.y + object.height / 2,
-        },
-        velocity: {
-          x: (Math.random() - 0.5) * 2,
-          y: (Math.random() - 0.5) * 2,
-        },
-        radius: Math.random() * 3,
-        color: color,
-        fades,
-      })
-    );
-  }
-}
-
-function createScoreLabel({ score = 100, object }) {
-  const scoreLabel = document.createElement("label");
-  document.querySelector(".container").appendChild(scoreLabel);
-  scoreLabel.innerHTML = score;
-  scoreLabel.style.position = "absolute";
-  scoreLabel.style.top = `${object.position.y + object.height / 2}px`;
-  scoreLabel.style.left = `${object.position.x + object.width / 2}px`;
-  scoreLabel.style.color = "white";
-  scoreLabel.style.userSelect = "none";
-  gsap.to(scoreLabel, {
-    opacity: 0,
-    y: -30,
-    duration: 0.75,
-    onComplete: () => {
-      document.querySelector(".container").removeChild(scoreLabel);
-    },
-  });
-}
-
-function rectangularCollision({ rectangle1, rectangle2 }) {
-  return (
-    rectangle1.position.y + rectangle1.height >= rectangle2.position.y &&
-    rectangle1.position.x <= rectangle2.position.x + rectangle2.width &&
-    rectangle1.position.x + rectangle1.width >= rectangle2.position.x
-  );
-}
-
 function endGame() {
   audio.gameOver.play();
   // Makes player disappear
@@ -169,10 +124,18 @@ function endGame() {
   createParticles({ object: player, color: "white", fades: true });
 }
 
-let spawnBuffer = 500;
 function animate() {
   if (!game.active) return;
   requestAnimationFrame(animate);
+
+  const msNow = window.performance.now();
+  const elapsed = msNow - msPrev;
+
+  if (elapsed < fpsInterval) {
+    return;
+  }
+  msPrev = msNow - (elapsed % fpsInterval);
+
   c.fillStyle = "rgba(0, 0, 0, 1)";
   c.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -458,109 +421,3 @@ function animate() {
 
   frames++;
 }
-
-// game UI
-
-document.getElementById("startButton").addEventListener("click", () => {
-  audio.backgroundMusic.play();
-  audio.start.play();
-  document.querySelector(".ui").style.display = "none";
-  init();
-  animate();
-  document.querySelector(".liveScore").style.display = "block";
-});
-
-document.getElementById("restartButton").addEventListener("click", () => {
-  audio.select.play();
-  document.querySelector(".restartScreen").style.display = "none";
-  init();
-  animate();
-});
-
-// game control events
-addEventListener("keydown", (e) => {
-  if (game.over) return;
-  switch (e.key) {
-    case "a":
-      keys.a.pressed = true;
-      break;
-    case "d":
-      keys.d.pressed = true;
-      break;
-    case "ArrowLeft":
-      keys.ArrowLeft.pressed = true;
-      break;
-    case "ArrowRight":
-      keys.ArrowRight.pressed = true;
-      break;
-    case " ":
-      keys.space.pressed = true;
-      if (e.key === " " && e.repeat) {
-        return;
-      }
-      if (player.powerUp === "MachineGun") return;
-      if (keys.space.pressed) {
-        audio.shoot.play();
-        projectiles.push(
-          new Projectile({
-            position: {
-              x: player.position.x + player.width / 2,
-              y: player.position.y,
-            },
-            velocity: {
-              x: 0,
-              y: -10,
-            },
-          })
-        );
-      }
-
-      break;
-  }
-});
-
-addEventListener("keyup", ({ key }) => {
-  if (game.over) return;
-  switch (key) {
-    case "a":
-      keys.a.pressed = false;
-      break;
-    case "d":
-      keys.d.pressed = false;
-      break;
-    case "ArrowLeft":
-      keys.ArrowLeft.pressed = false;
-      break;
-    case "ArrowRight":
-      keys.ArrowRight.pressed = false;
-      break;
-    case " ":
-      keys.space.pressed = false;
-
-      break;
-  }
-});
-
-addEventListener("mousedown", () => {
-  if (game.over) return;
-  keys.mouse.pressed = true;
-  if (player.powerUp === "MachineGun") return;
-  audio.shoot.play();
-  projectiles.push(
-    new Projectile({
-      position: {
-        x: player.position.x + player.width / 2,
-        y: player.position.y,
-      },
-      velocity: {
-        x: 0,
-        y: -10,
-      },
-    })
-  );
-});
-
-addEventListener("mouseup", () => {
-  if (game.over) return;
-  keys.mouse.pressed = false;
-});

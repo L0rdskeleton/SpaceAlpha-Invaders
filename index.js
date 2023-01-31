@@ -250,7 +250,7 @@ function animate() {
     // if projectile touches powerUp
     for (let j = powerUps.length - 1; j >= 0; j--) {
       const powerUp = powerUps[j];
-      const randomPowerUp = Math.floor(Math.random() * powerUpTypes.length);
+      var randomPowerUp = Math.floor(Math.random() * powerUpTypes.length);
       if (
         Math.hypot(
           projectile.position.x - powerUp.position.x,

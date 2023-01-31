@@ -2,7 +2,7 @@ const canvas = document.querySelector("canvas");
 const c = canvas.getContext("2d");
 const scoreEl = document.getElementById("scoreEl");
 const finalScoreEl = document.getElementById("finalScoreEl");
-const powerUpTypes ["MachineGun", "MultiShot"]
+const powerUpTypes = ["MachineGun", "MultiShot"]
 
 canvas.width = 1366;
 canvas.height = 768;
@@ -439,7 +439,7 @@ function animate() {
           x = -5,
           y = -10,
         }
-      })
+      }),
       new Projectile({
         position: {
           x: player.position.x + player.width / 2,

@@ -553,8 +553,3 @@ addEventListener("mouseup", () => {
   if (game.over) return;
   keys.mouse.pressed = false;
 });
-
-addEventListener("resize", () => {
-  canvas.width = innerWidth;
-  canvas.height = innerHeight;
-});

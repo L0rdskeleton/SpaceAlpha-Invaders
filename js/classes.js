@@ -219,6 +219,7 @@ class Invader {
   }
 
   shoot(invaderProjectiles) {
+    audio.enemyShoot.play();
     invaderProjectiles.push(
       new InvaderProjectile({
         position: {
@@ -319,6 +320,7 @@ class Bomb {
   }
 
   explode() {
+    audio.bomb.play();
     this.active = true;
     this.velocity.x = 0;
     this.velocity.y = 0;

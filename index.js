@@ -153,6 +153,7 @@ function rectangularCollision({ rectangle1, rectangle2 }) {
 }
 
 function endGame() {
+  audio.gameOver.play();
   // Makes player disappear
   setTimeout(() => {
     player.opacity = 0;
@@ -295,6 +296,7 @@ function animate() {
         projectiles.splice(i, 1);
         powerUps.splice(j, 1);
         player.powerUp = "MachineGun";
+        audio.bonus.play();
         setTimeout(() => {
           player.powerUp = null;
         }, 5000);
@@ -369,6 +371,8 @@ function animate() {
                 color: "orange",
                 fades: true,
               });
+              // singular projectile hits an enemy
+              audio.explode.play();
               grid.invaders.splice(i, 1);
               projectiles.splice(j, 1);
 
@@ -435,6 +439,8 @@ function animate() {
       frames % 4 === 0) ||
     (keys.mouse.pressed && player.powerUp === "MachineGun" && frames % 4 === 0)
   ) {
+    audio.shoot.play();
+
     projectiles.push(
       new Projectile({
         position: {
@@ -456,6 +462,8 @@ function animate() {
 // game UI
 
 document.getElementById("startButton").addEventListener("click", () => {
+  audio.backgroundMusic.play();
+  audio.start.play();
   document.querySelector(".ui").style.display = "none";
   init();
   animate();
@@ -463,6 +471,7 @@ document.getElementById("startButton").addEventListener("click", () => {
 });
 
 document.getElementById("restartButton").addEventListener("click", () => {
+  audio.select.play();
   document.querySelector(".restartScreen").style.display = "none";
   init();
   animate();
@@ -491,6 +500,7 @@ addEventListener("keydown", (e) => {
       }
       if (player.powerUp === "MachineGun") return;
       if (keys.space.pressed) {
+        audio.shoot.play();
         projectiles.push(
           new Projectile({
             position: {
@@ -535,6 +545,7 @@ addEventListener("mousedown", () => {
   if (game.over) return;
   keys.mouse.pressed = true;
   if (player.powerUp === "MachineGun") return;
+  audio.shoot.play();
   projectiles.push(
     new Projectile({
       position: {

@@ -12,6 +12,21 @@
     <div class="container">
       <p class="liveScore"><span>Score: </span><span id="scoreEl">0</span></p>
       <canvas></canvas>
+      <div class="ui">
+        <h1 class="ui__headline">SpaceAlpha Invaders</h1>
+        <div class="ui__btn--container" id="startButton">
+          <img src="./img/button.png" alt="Start Button" class="ui__btn" />
+          <span class="ui__btn--text">Start</span>
+        </div>
+      </div>
+      <div class="ui restartScreen">
+        <h1 class="ui__headline">Game Over</h1>
+        <p class="finalScore">Final score: <span id="finalScoreEl">0</span></p>
+        <div class="ui__btn--container" id="restartButton">
+          <img src="./img/button.png" alt="Start Button" class="ui__btn" />
+          <span class="ui__btn--text">Restart</span>
+        </div>
+      </div>
     </div>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"

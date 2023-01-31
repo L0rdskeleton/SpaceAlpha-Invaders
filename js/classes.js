@@ -7,6 +7,8 @@ class Player {
     this.rotation = 0;
     this.opacity = 1;
     this.powerUp = null;
+    this.particles = [];
+    this.frames = 0;
 
     const image = new Image();
     image.src = "./img/spacefighter.png";
@@ -48,6 +50,27 @@ class Player {
     if (this.image) {
       this.draw();
       this.position.x += this.velocity.x;
+    }
+    if (this.opacity !== 1) {
+      return;
+    }
+    this.frames++;
+    if (this.frames % 2 === 0) {
+      this.particles.push(
+        new Particle({
+          position: {
+            x: this.position.x + this.width / 2,
+            y: this.position.y + this.height,
+          },
+          velocity: {
+            x: (Math.random() - 0.5) * 1.5,
+            y: 1.4,
+          },
+          radius: Math.random() * 2,
+          color: "white",
+          fades: true,
+        })
+      );
     }
   }
 }
@@ -224,7 +247,7 @@ class Grid {
     this.invaders = [];
 
     const columns = Math.floor(Math.random() * 10 + 3);
-    const rows = Math.floor(Math.random() * 5 + 1);
+    const rows = Math.floor(Math.random() * 5 + 2);
     const invaderWidth = 48;
     this.width = columns * invaderWidth;
     for (let x = 0; x < columns; x++) {
@@ -245,7 +268,7 @@ class Grid {
     this.velocity.y = 0;
 
     if (this.position.x + this.width >= canvas.width || this.position.x <= 0) {
-      this.velocity.x = -this.velocity.x;
+      this.velocity.x = -this.velocity.x * 1.15;
       this.velocity.y = 40;
     }
   }

@@ -13,7 +13,8 @@ html {
 
 body {
   font-family: sans-serif;
-  background-color: aqua;
+  background-color: cornflowerblue;
+  user-select: none;
 }
 
 .liveScore {
@@ -23,6 +24,7 @@ body {
   font-size: 1.6rem;
   padding: 1.6rem;
   letter-spacing: 1px;
+  display: none;
 }
 
 .container {
@@ -30,4 +32,63 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+/* UI Start and Restart Game */
+
+.ui {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background: url("./img/startScreenBackground.png") no-repeat;
+  background-size: contain;
+  z-index: 10;
+  display: grid;
+  place-content: center;
+  text-align: center;
+}
+
+.ui__content {
+  display: grid;
+  gap: 8rem;
+}
+
+.ui__headline {
+  color: white;
+  font-size: 6.4rem;
+  margin-bottom: 8rem;
+}
+
+.ui__btn--container {
+  position: relative;
+  display: inline-block;
+}
+
+.ui__btn {
+  cursor: pointer;
+}
+
+.ui__btn--text {
+  color: white;
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  line-height: 1.6rem;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+
+.restartScreen {
+  display: none;
+}
+
+.finalScore {
+  color: white;
+  font-size: 2.4rem;
+  margin-bottom: 2.4rem;
 }

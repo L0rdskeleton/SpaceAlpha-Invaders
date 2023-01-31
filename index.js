@@ -1,6 +1,7 @@
 const canvas = document.querySelector("canvas");
 const c = canvas.getContext("2d");
 const scoreEl = document.getElementById("scoreEl");
+const finalScoreEl = document.getElementById("finalScoreEl");
 
 canvas.width = 1366;
 canvas.height = 768;
@@ -9,19 +10,25 @@ function randomBetween(min, max) {
   return Math.random() * (max - min) + min;
 }
 
-const player = new Player();
-const projectiles = [];
-const grids = [];
-const invaderProjectiles = [];
-const particles = [];
-const bombs = [];
-const powerUps = [];
+let player = new Player();
+let projectiles = [];
+let grids = [];
+let invaderProjectiles = [];
+let particles = [];
+let bombs = [];
+let powerUps = [];
 
-const keys = {
+let keys = {
   a: {
     pressed: false,
   },
   d: {
+    pressed: false,
+  },
+  ArrowLeft: {
+    pressed: false,
+  },
+  ArrowRight: {
     pressed: false,
   },
   space: {
@@ -40,22 +47,62 @@ let game = {
 };
 let score = 0;
 
-// generate stars
-for (let i = 0; i < 100; i++) {
-  particles.push(
-    new Particle({
-      position: {
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-      },
-      velocity: {
-        x: 0,
-        y: 0.3,
-      },
-      radius: Math.random() * 3,
-      color: "white",
-    })
-  );
+function init() {
+  scoreEl.innerHTML = 0;
+  player = new Player();
+  projectiles = [];
+  grids = [];
+  invaderProjectiles = [];
+  particles = [];
+  bombs = [];
+  powerUps = [];
+
+  keys = {
+    a: {
+      pressed: false,
+    },
+    d: {
+      pressed: false,
+    },
+    ArrowLeft: {
+      pressed: false,
+    },
+    ArrowRight: {
+      pressed: false,
+    },
+    space: {
+      pressed: false,
+    },
+    mouse: {
+      pressed: false,
+    },
+  };
+
+  frames = 0;
+  randomInterval = Math.floor(Math.random() * 500) + 500;
+  game = {
+    over: false,
+    active: true,
+  };
+  score = 0;
+
+  // generate stars
+  for (let i = 0; i < 100; i++) {
+    particles.push(
+      new Particle({
+        position: {
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+        },
+        velocity: {
+          x: 0,
+          y: 0.3,
+        },
+        radius: Math.random() * 2,
+        color: "white",
+      })
+    );
+  }
 }
 
 function createParticles({ object, color, fades }) {
@@ -97,6 +144,31 @@ function createScoreLabel({ score = 100, object }) {
   });
 }
 
+function rectangularCollision({ rectangle1, rectangle2 }) {
+  return (
+    rectangle1.position.y + rectangle1.height >= rectangle2.position.y &&
+    rectangle1.position.x <= rectangle2.position.x + rectangle2.width &&
+    rectangle1.position.x + rectangle1.width >= rectangle2.position.x
+  );
+}
+
+function endGame() {
+  // Makes player disappear
+  setTimeout(() => {
+    player.opacity = 0;
+    game.over = true;
+  }, 0);
+
+  // Stops the game
+  setTimeout(() => {
+    game.active = false;
+    document.querySelector(".restartScreen").style.display = "grid";
+    finalScoreEl.innerHTML = score;
+  }, 2000);
+  createParticles({ object: player, color: "white", fades: true });
+}
+
+let spawnBuffer = 500;
 function animate() {
   if (!game.active) return;
   requestAnimationFrame(animate);
@@ -113,7 +185,7 @@ function animate() {
   }
 
   // Spawn powerUps
-  if (frames % 500 === 0 && bombs.length < 3) {
+  if (frames % 500 === 0 && powerUps.length < 3) {
     powerUps.push(
       new PowerUp({
         position: { x: 0, y: Math.random() * 300 + 15 },
@@ -147,6 +219,15 @@ function animate() {
 
   player.update();
 
+  for (let i = player.particles.length - 1; i >= 0; i--) {
+    const particle = player.particles[i];
+    particle.update();
+
+    if (particle.opacity <= 0) {
+      player.particles.splice(i, 1);
+    }
+  }
+
   particles.forEach((particle, i) => {
     // respawn stars at top
     if (particle.position.y - particle.radius >= canvas.height) {
@@ -174,21 +255,13 @@ function animate() {
     }
     // Projectile hit player
     if (
-      invaderProjectile.position.y + invaderProjectile.height >=
-        player.position.y &&
-      invaderProjectile.position.x <= player.position.x + player.width &&
-      invaderProjectile.position.x + invaderProjectile.width >=
-        player.position.x
+      rectangularCollision({
+        rectangle1: invaderProjectile,
+        rectangle2: player,
+      })
     ) {
-      setTimeout(() => {
-        invaderProjectiles.splice(index, 1);
-        player.opacity = 0;
-        game.over = true;
-      }, 0);
-      setTimeout(() => {
-        game.active = false;
-      }, 2000);
-      createParticles({ object: player, color: "white", fades: true });
+      invaderProjectiles.splice(index, 1);
+      endGame();
     }
   });
 
@@ -315,15 +388,30 @@ function animate() {
           }, 0);
         }
       });
+
+      // remove player if invader touches
+      if (
+        rectangularCollision({
+          rectangle1: invader,
+          rectangle2: player,
+        }) &&
+        !game.over
+      ) {
+        endGame();
+      }
     }
   });
 
-  if (keys.a.pressed && player.position.x >= 0) {
+  if (
+    (keys.a.pressed && player.position.x >= 0) ||
+    (keys.ArrowLeft.pressed && player.position.x >= 0)
+  ) {
     player.velocity.x = -7;
     player.rotation = -0.15;
   } else if (
-    keys.d.pressed &&
-    player.position.x + player.width <= canvas.width
+    (keys.d.pressed && player.position.x + player.width <= canvas.width) ||
+    (keys.ArrowRight.pressed &&
+      player.position.x + player.width <= canvas.width)
   ) {
     player.velocity.x = 7;
     player.rotation = 0.15;
@@ -331,11 +419,13 @@ function animate() {
     player.velocity.x = 0;
     player.rotation = 0;
   }
-  //   Spawning enemies
+  //   spawning enemies
   if (frames % randomInterval === 0) {
+    spawnBuffer = spawnBuffer < 0 ? 100 : spawnBuffer;
     grids.push(new Grid());
-    randomInterval = Math.floor(Math.random() * 500) + 500;
+    randomInterval = Math.floor(Math.random() * 500) + spawnBuffer;
     frames = 0;
+    spawnBuffer -= 100;
   }
 
   // start or stop powerups
@@ -363,8 +453,22 @@ function animate() {
   frames++;
 }
 
-animate();
+// game UI
 
+document.getElementById("startButton").addEventListener("click", () => {
+  document.querySelector(".ui").style.display = "none";
+  init();
+  animate();
+  document.querySelector(".liveScore").style.display = "block";
+});
+
+document.getElementById("restartButton").addEventListener("click", () => {
+  document.querySelector(".restartScreen").style.display = "none";
+  init();
+  animate();
+});
+
+// game control events
 addEventListener("keydown", (e) => {
   if (game.over) return;
   switch (e.key) {
@@ -373,6 +477,12 @@ addEventListener("keydown", (e) => {
       break;
     case "d":
       keys.d.pressed = true;
+      break;
+    case "ArrowLeft":
+      keys.ArrowLeft.pressed = true;
+      break;
+    case "ArrowRight":
+      keys.ArrowRight.pressed = true;
       break;
     case " ":
       keys.space.pressed = true;
@@ -407,6 +517,12 @@ addEventListener("keyup", ({ key }) => {
       break;
     case "d":
       keys.d.pressed = false;
+      break;
+    case "ArrowLeft":
+      keys.ArrowLeft.pressed = false;
+      break;
+    case "ArrowRight":
+      keys.ArrowRight.pressed = false;
       break;
     case " ":
       keys.space.pressed = false;

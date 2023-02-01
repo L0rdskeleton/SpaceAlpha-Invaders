@@ -96,7 +96,7 @@ class Projectile {
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
   }
-
+}
 static createMultiShotProjectile(xVelocity) {
     return  new Projectile({
         position: {
@@ -108,8 +108,8 @@ static createMultiShotProjectile(xVelocity) {
           y: -10,
         }
       })
-}
-}
+} 
+
 class Particle {
   constructor({ position, velocity, radius, color, fades }) {
     this.position = position;

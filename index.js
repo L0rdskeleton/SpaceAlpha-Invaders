@@ -424,34 +424,8 @@ function animate() {
       })
     );
   }
-  if (
-    (keys.space.pressed && player.powerUp === "MultiShot" && !game.over) || (keys.mouse.pressed && player.powerUp === "MultiShot" && !game.over)
-    ) {
-    audio.shoot.play();
-    
-    projectiles.push(
-      new Projectile({
-        position: {
-          x: player.position.x + player.width / 2,
-          y: player.position.y,
-        },
-        velocity: {
-          x: -5,
-          y: -10,
-        }
-      }),
-      new Projectile({
-        position: {
-          x: player.position.x + player.width / 2,
-          y: player.position.y,
-        },
-        velocity: {
-          x: 5,
-          y: -10,
-        }
-      })
-    );
-}
+  
+
 
   frames++;
 }

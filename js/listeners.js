@@ -56,7 +56,7 @@ addEventListener("keydown", (e) => {
         );
       }
       if (
-    (keys.space.pressed && player.powerUp === "MultiShot" && !game.over)
+    (keys.space.pressed && player.powerUp === "MultiShot")
     ) {
     audio.shoot.play();
     
@@ -130,7 +130,7 @@ addEventListener("mousedown", () => {
     })
   );
   if (
-    (keys.mouse.pressed && player.powerUp === "MultiShot" && !game.over)
+    (keys.mouse.pressed && player.powerUp === "MultiShot")
     ) {
     audio.shoot.play();
     

@@ -97,7 +97,20 @@ class Projectile {
     this.position.y += this.velocity.y;
   }
 }
-
+  function createMultiShotProjectile(xVelocity) {
+    return  projectiles.push(
+      new Projectile({
+        position: {
+          x: player.position.x + player.width / 2,
+          y: player.position.y,
+        },
+        velocity: {
+          x: xVelocity,
+          y: -10,
+        }
+      })
+      ) 
+}
 class Particle {
   constructor({ position, velocity, radius, color, fades }) {
     this.position = position;

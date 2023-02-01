@@ -11,7 +11,7 @@ class Player {
     this.frames = 0;
 
     const image = new Image();
-    image.src = "./img/spacefighter.png";
+    image.src = "./img/spacefighter.gif";
     image.onload = () => {
       const scale = 0.15;
       this.image = image;

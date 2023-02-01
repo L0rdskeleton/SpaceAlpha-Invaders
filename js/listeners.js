@@ -55,6 +55,34 @@ addEventListener("keydown", (e) => {
           })
         );
       }
+      if (
+    (keys.space.pressed && player.powerUp === "MultiShot" && !game.over)
+    ) {
+    audio.shoot.play();
+    
+    projectiles.push(
+      new Projectile({
+        position: {
+          x: player.position.x + player.width / 2,
+          y: player.position.y,
+        },
+        velocity: {
+          x: -3,
+          y: -10,
+        }
+      }),
+      new Projectile({
+        position: {
+          x: player.position.x + player.width / 2,
+          y: player.position.y,
+        },
+        velocity: {
+          x: 3,
+          y: -10,
+        }
+      })
+    );
+}
 
       break;
   }
@@ -101,6 +129,34 @@ addEventListener("mousedown", () => {
       },
     })
   );
+  if (
+    (keys.mouse.pressed && player.powerUp === "MultiShot" && !game.over)
+    ) {
+    audio.shoot.play();
+    
+    projectiles.push(
+      new Projectile({
+        position: {
+          x: player.position.x + player.width / 2,
+          y: player.position.y,
+        },
+        velocity: {
+          x: -3,
+          y: -10,
+        }
+      }),
+      new Projectile({
+        position: {
+          x: player.position.x + player.width / 2,
+          y: player.position.y,
+        },
+        velocity: {
+          x: 3,
+          y: -10,
+        }
+      })
+    );
+}
 });
 
 addEventListener("mouseup", () => {

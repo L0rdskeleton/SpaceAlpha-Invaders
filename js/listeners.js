@@ -59,11 +59,9 @@ addEventListener("keydown", (e) => {
     (keys.space.pressed && player.powerUp === "MultiShot")
     ) {
     audio.shoot.play();
-    
-    projectiles.push(
-      createMultiShotProjectile("-3");
-      createMultiShotProjectile("3");
-    );
+     
+      createMultiShotProjectile(-3);
+      createMultiShotProjectile(3);
 }
 
       break;
@@ -116,10 +114,8 @@ addEventListener("mousedown", () => {
     ) {
     audio.shoot.play();
     
-    projectiles.push(
-      createMultiShotProjectile("-3");
-      createMultiShotProjectile("3");
-    );
+      createMultiShotProjectile(-3);
+      createMultiShotProjectile(3);
 }
 });
 

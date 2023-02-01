@@ -61,26 +61,8 @@ addEventListener("keydown", (e) => {
     audio.shoot.play();
     
     projectiles.push(
-      new Projectile({
-        position: {
-          x: player.position.x + player.width / 2,
-          y: player.position.y,
-        },
-        velocity: {
-          x: -3,
-          y: -10,
-        }
-      }),
-      new Projectile({
-        position: {
-          x: player.position.x + player.width / 2,
-          y: player.position.y,
-        },
-        velocity: {
-          x: 3,
-          y: -10,
-        }
-      })
+      createMultiShotProjectile(-3);
+      createMultiShotProjectile(3);
     );
 }
 
@@ -135,26 +117,8 @@ addEventListener("mousedown", () => {
     audio.shoot.play();
     
     projectiles.push(
-      new Projectile({
-        position: {
-          x: player.position.x + player.width / 2,
-          y: player.position.y,
-        },
-        velocity: {
-          x: -3,
-          y: -10,
-        }
-      }),
-      new Projectile({
-        position: {
-          x: player.position.x + player.width / 2,
-          y: player.position.y,
-        },
-        velocity: {
-          x: 3,
-          y: -10,
-        }
-      })
+      createMultiShotProjectile(-3);
+      createMultiShotProjectile(3);
     );
 }
 });

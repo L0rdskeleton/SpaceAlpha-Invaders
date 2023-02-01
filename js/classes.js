@@ -108,7 +108,7 @@ static createMultiShotProjectile(xVelocity) {
           y: -10,
         }
       })
-
+}
 class Particle {
   constructor({ position, velocity, radius, color, fades }) {
     this.position = position;

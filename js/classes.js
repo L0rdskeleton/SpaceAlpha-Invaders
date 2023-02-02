@@ -96,10 +96,8 @@ class Projectile {
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
   }
-}
-  function createMultiShotProjectile(xVelocity) {
-    return  projectiles.push(
-      new Projectile({
+  static createMultiShotProjectile(xVelocity) {
+    return new Projectile({
         position: {
           x: player.position.x + player.width / 2,
           y: player.position.y,
@@ -107,15 +105,22 @@ class Projectile {
         velocity: {
           x: xVelocity,
           y: -10,
-        }
+        },
       })
-      ) 
 }
+}  
    function playerShoots() {
    if((keys.space.pressed && !game.over) || (keys.mouse.pressed && !game.over)) {
-   audio.shoot.play()
-   projectiles.push(
-          new Projectile({
+   if(player.powerUp === "MultiShot") {
+   audio.shoot.play();
+    projectiles.push(
+      Projectile.createMultiShotProjectile(-3),
+      Projectile.createMultiShotProjectile(3)
+     )
+}
+     audio.shoot.play()
+   return projectiles.push(
+     new Projectile({
             position: {
               x: player.position.x + player.width / 2,
               y: player.position.y,
@@ -125,14 +130,10 @@ class Projectile {
               y: -10,
             },
           })
-        );
+     )
+    
        
-   if(player.powerUp === "MultiShot") {
-   audio.shoot.play();
-     
-      createMultiShotProjectile(-3);
-      createMultiShotProjectile(3);
-}
+   
 }
 }
 class Particle {

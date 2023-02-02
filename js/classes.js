@@ -98,7 +98,7 @@ class Projectile {
   }
 }
   function createMultiShotProjectile(xVelocity) {
-    return Projectile({
+    new Projectile({
         position: {
           x: player.position.x + player.width / 2,
           y: player.position.y,
@@ -113,7 +113,7 @@ class Projectile {
    function playerShoots() {
    if((keys.space.pressed && !game.over) || (keys.mouse.pressed && !game.over)) {
    audio.shoot.play()
-   projectiles.push(
+   
           new Projectile({
             position: {
               x: player.position.x + player.width / 2,
@@ -124,7 +124,7 @@ class Projectile {
               y: -10,
             },
           })
-        );
+        
        
    if(player.powerUp === "MultiShot") {
    audio.shoot.play();

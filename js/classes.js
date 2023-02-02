@@ -111,6 +111,29 @@ class Projectile {
       })
       ) 
 }
+   function playerShoots() {
+   if((keys.space.pressed && !game.over) || (keys.mouse.pressed && !game.over)) {
+   audio.shoot.play()
+   projectiles.push(
+          new Projectile({
+            position: {
+              x: player.position.x + player.width / 2,
+              y: player.position.y,
+            },
+            velocity: {
+              x: 0,
+              y: -10,
+            },
+          })
+        );
+       }
+   if((keys.space.pressed && player.powerUp === "MultiShot" && !game.over) || (keys.mouse.pressed && player.powerUp === "MultiShot" && !game.over)) {
+   audio.shoot.play();
+     
+      createMultiShotProjectile(-3);
+      createMultiShotProjectile(3);
+}
+}
 class Particle {
   constructor({ position, velocity, radius, color, fades }) {
     this.position = position;

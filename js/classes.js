@@ -129,8 +129,8 @@ class Projectile {
    if(player.powerUp === "MultiShot") {
    audio.shoot.play();
      
-      Projectiles.createMultiShotProjectile(-3);
-      Projectiles.createMultiShotProjectile(3);
+      Projectile.createMultiShotProjectile(-3);
+      Projectile.createMultiShotProjectile(3);
 }
 }
 }

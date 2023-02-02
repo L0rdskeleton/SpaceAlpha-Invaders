@@ -106,7 +106,8 @@ class Projectile {
         velocity: {
           x: xVelocity,
           y: -10,
-        }
+        },
+       color: "red"
       })
 }
 }

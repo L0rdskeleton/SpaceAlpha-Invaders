@@ -82,7 +82,18 @@ class Projectile {
     this.color = color;
     this.radius = 4;
   }
-
+static createMultiShotProjectile(xVelocity) {
+    return new Projectile({
+        position: {
+          x: player.position.x + player.width / 2,
+          y: player.position.y,
+        },
+        velocity: {
+          x: xVelocity,
+          y: -10,
+        },
+      })
+}
   draw() {
     c.beginPath();
     c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
@@ -96,18 +107,7 @@ class Projectile {
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
   }
-  static createMultiShotProjectile(xVelocity) {
-    return new Projectile({
-        position: {
-          x: player.position.x + player.width / 2,
-          y: player.position.y,
-        },
-        velocity: {
-          x: xVelocity,
-          y: -10,
-        },
-      })
-}
+  
 }  
    function playerShoots() {
    if((keys.space.pressed && !game.over) || (keys.mouse.pressed && !game.over)) {

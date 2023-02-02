@@ -96,8 +96,8 @@ class Projectile {
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
   }
-  
-  static createMultiShotProjectile(xVelocity) {
+}
+  function createMultiShotProjectile(xVelocity) {
     return new Projectile({
         position: {
           x: player.position.x + player.width / 2,
@@ -108,7 +108,6 @@ class Projectile {
           y: -10,
         }
       })
-}
 }
    function playerShoots() {
    if((keys.space.pressed && !game.over) || (keys.mouse.pressed && !game.over)) {

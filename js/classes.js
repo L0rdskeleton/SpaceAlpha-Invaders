@@ -126,12 +126,13 @@ class Projectile {
             },
           })
         );
-       }
-   if((keys.space.pressed && player.powerUp === "MultiShot" && !game.over) || (keys.mouse.pressed && player.powerUp === "MultiShot" && !game.over)) {
+       
+   if(player.powerUp === "MultiShot") {
    audio.shoot.play();
      
       createMultiShotProjectile(-3);
       createMultiShotProjectile(3);
+}
 }
 }
 class Particle {

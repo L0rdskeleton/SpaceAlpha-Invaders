@@ -107,12 +107,17 @@ class Projectile {
           y: -10,
         },
       })
-      )
 }
 }  
    function playerShoots() {
    if((keys.space.pressed && !game.over) || (keys.mouse.pressed && !game.over)) {
-   audio.shoot.play()
+   if(player.powerUp === "MultiShot") {
+   audio.shoot.play();
+     
+      Projectile.createMultiShotProjectile(-3);
+      Projectile.createMultiShotProjectile(3);
+}
+     audio.shoot.play()
    return projectiles.push(
      new Projectile({
             position: {
@@ -127,12 +132,7 @@ class Projectile {
      )
     
        
-   if(player.powerUp === "MultiShot") {
-   audio.shoot.play();
-     
-      Projectile.createMultiShotProjectile(-3);
-      Projectile.createMultiShotProjectile(3);
-}
+   
 }
 }
 class Particle {

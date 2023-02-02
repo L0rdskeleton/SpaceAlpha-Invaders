@@ -96,8 +96,8 @@ class Projectile {
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
   }
-
-  static createMultiShotProjectile(xVelocity) {
+}
+  function createMultiShotProjectile(xVelocity) {
     new Projectile({
         position: {
           x: player.position.x + player.width / 2,
@@ -109,7 +109,7 @@ class Projectile {
         },
       })
 }
-}
+  
    function playerShoots() {
    if((keys.space.pressed && !game.over) || (keys.mouse.pressed && !game.over)) {
    audio.shoot.play()
@@ -129,8 +129,8 @@ class Projectile {
    if(player.powerUp === "MultiShot") {
    audio.shoot.play();
      
-      Projectile.createMultiShotProjectile(-3);
-      Projectile.createMultiShotProjectile(3);
+      createMultiShotProjectile(-3);
+      createMultiShotProjectile(3);
 }
 }
 }

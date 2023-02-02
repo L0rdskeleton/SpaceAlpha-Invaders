@@ -98,7 +98,7 @@ class Projectile {
   }
 
   static createMultiShotProjectile(xVelocity) {
-    return new Projectile({
+    new Projectile({
         position: {
           x: player.position.x + player.width / 2,
           y: player.position.y,
@@ -107,7 +107,6 @@ class Projectile {
           x: xVelocity,
           y: -10,
         },
-       color: "red"
       })
 }
 }

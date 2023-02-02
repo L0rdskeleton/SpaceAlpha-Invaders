@@ -98,7 +98,7 @@ class Projectile {
   }
 }
   function createMultiShotProjectile(xVelocity) {
-    new Projectile({
+    return Projectile({
         position: {
           x: player.position.x + player.width / 2,
           y: player.position.y,

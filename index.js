@@ -425,8 +425,8 @@ function animate() {
   if((keys.space.pressed && !game.over) || (keys.mouse.pressed && !game.over)){
     audio.shoot.play();
     projectiles.push(
-      Projectile.createProjectile("Math.sin(frames)", -10, randomColor()),
-      Projectile.createProjectile("Math.cos(frames)", -10, randomColor())
+      Projectile.createProjectile(Math.sin(frames) * 5, -10, randomColor()),
+      Projectile.createProjectile(Math.cos(frames) * 5, -10, randomColor())
       )
   }
   

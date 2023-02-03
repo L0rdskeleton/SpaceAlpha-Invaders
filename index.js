@@ -415,7 +415,7 @@ function animate() {
     );
   }
   function randomColor() {
-  '#' += Math.floor(Math.random()*16777215).toString(16);
+  "#" += Math.floor(Math.random()*16777215).toString(16);
 }
   if((keys.space.pressed && !game.over) || (keys.mouse.pressed && !game.over)){
     audio.shoot.play();

@@ -73,6 +73,19 @@ class Player {
       );
     }
   }
+   static playerShoots() {
+     audio.shoot.play();
+     projectiles.push(
+     Projectile.createProjectile()
+     )
+     if(player.powerUp === "MultiShot") {
+       audio.shoot.play();
+       projectiles.push(
+       Projectile.createProjectile(-3),
+       Projectile.createProjectile(3)
+      )
+    }
+  }
 }
 
 class Projectile {
@@ -108,23 +121,9 @@ class Projectile {
         },
       color: color,
       })
-}
+   }
 }  
-   function playerShoots() {
-   if((keys.space.pressed && !game.over) || (keys.mouse.pressed && !game.over)) {
-     audio.shoot.play();
-   projectiles.push(
-     Projectile.createProjectile()
-     )
-if(player.powerUp === "MultiShot") {
-   audio.shoot.play();
-    projectiles.push(
-      Projectile.createProjectile(-3),
-      Projectile.createProjectile(3)
-     )
-}
-}
-}
+   
 class Particle {
   constructor({ position, velocity, radius, color, fades }) {
     this.position = position;

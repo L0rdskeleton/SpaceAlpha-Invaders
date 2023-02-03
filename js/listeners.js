@@ -41,7 +41,7 @@ addEventListener("keydown", (e) => {
       }
       if (player.powerUp === "MachineGun") return;
       if (keys.space.pressed) {
-       playerShoots();
+       Player.playerShoots();
 
       break;
       }
@@ -75,7 +75,7 @@ addEventListener("mousedown", () => {
   keys.mouse.pressed = true;
   if (player.powerUp === "MachineGun") return;
   if (gameStarted) {
-   playerShoots();
+   Player.playerShoots();
   }
 });
 

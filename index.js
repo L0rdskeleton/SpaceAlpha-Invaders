@@ -414,6 +414,21 @@ function animate() {
       Projectile.createProjectile(0, -10, "yellow")
     );
   }
+  function randomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+  if((keys.space.pressed && !game.over) || (keys.mouse.pressed && !game.over)){
+    audio.shoot.play();
+    projectiles.push(
+      Projectile.createProjectile(Math.sin(frames), -10, randomColor()),
+      Projectile.createProjectile(Math.cos(frames), -10, randomColor())
+      )
+  }
   
 
 

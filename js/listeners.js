@@ -41,22 +41,10 @@ addEventListener("keydown", (e) => {
       }
       if (player.powerUp === "MachineGun") return;
       if (keys.space.pressed) {
-        audio.shoot.play();
-        projectiles.push(
-          new Projectile({
-            position: {
-              x: player.position.x + player.width / 2,
-              y: player.position.y,
-            },
-            velocity: {
-              x: 0,
-              y: -10,
-            },
-          })
-        );
-      }
+       Player.playerShoots();
 
       break;
+      }
   }
 });
 
@@ -87,20 +75,8 @@ addEventListener("mousedown", () => {
   keys.mouse.pressed = true;
   if (player.powerUp === "MachineGun") return;
   if (gameStarted) {
-    audio.shoot.play();
+   Player.playerShoots();
   }
-  projectiles.push(
-    new Projectile({
-      position: {
-        x: player.position.x + player.width / 2,
-        y: player.position.y,
-      },
-      velocity: {
-        x: 0,
-        y: -10,
-      },
-    })
-  );
 });
 
 addEventListener("mouseup", () => {
